@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Deepa 💖</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, #ffe1f0, #ffd1e3, #ffc1d7);
+      overflow: hidden;
+      padding: 18px;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      font-size: 16px;
+      opacity: 0.7;
+      animation: floatUp linear forwards;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+      }
+      to {
+        transform: translateY(-120vh) scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      width: min(420px, 92vw);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 26px;
+      padding: 26px 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.15);
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.6);
+      position: relative;
+      z-index: 5;
+    }
+
+    .title {
+      font-size: 28px;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 10px 0 18px;
+      font-size: 16px;
+      opacity: 0.85;
+      line-height: 1.35;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      background: rgba(255, 77, 125, 0.12);
+      color: #ff2c67;
+      margin-bottom: 14px;
+    }
+
+    .btnRow {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      user-select: none;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #ff3d75, #ff7aa5);
+      color: white;
+      box-shadow: 0 12px 26px rgba(255, 61, 117, 0.3);
+    }
+
+    #yesBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(255, 61, 117, 0.35);
+    }
+
+    #noBtn {
+      background: #111;
+      color: white;
+      opacity: 0.92;
+      position: absolute;
+      left: 56%;
+      top: 70%;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.25);
+    }
+
+    .tinyText {
+      margin-top: 14px;
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    .hidden { display: none; }
+
+    .finalTitle {
+      font-size: 30px;
+      margin: 0;
+      font-weight: 900;
+      color: #ff2c67;
+    }
+
+    .finalMsg {
+      margin-top: 12px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .copyBox {
+      margin-top: 14px;
+      background: rgba(255, 44, 103, 0.08);
+      padding: 12px 14px;
+      border-radius: 18px;
+      font-weight: 700;
+      color: #ff2c67;
+    }
+
+    .miniBtn {
+      margin-top: 14px;
+      background: white;
+      border: 2px solid rgba(255, 44, 103, 0.28);
+      color: #ff2c67;
+      font-weight: 800;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MAIN CARD -->
+  <div class="card" id="mainCard">
+    <div class="chip">💌 A small question for you</div>
+    <h1 class="title">Deepa 🐼</h1>
+    <p class="subtitle">
+      I made this website for you ♥️<br/>
+      Will you be my Valentine?
+    </p>
+
+    <div class="btnRow">
+      <button id="yesBtn">YES 😍</button>
+    </div>
+
+    <p class="tinyText">dont click No🙁 </p>
+  </div>
+
+  <!-- NO BUTTON (moves) -->
+  <button id="noBtn">NO 🙁</button>
+
+  <!-- FINAL CARD -->
+  <div class="card hidden" id="finalCard">
+    <h1 class="finalTitle">YAYYY 🥺💖</h1>
+    <p class="finalMsg">
+      Officially confirmed ✅<br/>
+      Deepa is my Valentine now♥️
+    </p>
+
+    <div class="copyBox">
+      Now text me: <br/>
+      <span id="copyText">“Okay da, YES 😘❤️”</span>
+    </div>
+
+    <button class="miniBtn" id="copyBtn">Copy message 📋</button>
+    <button class="miniBtn" id="againBtn">Replay 😈💘</button>
+  </div>
+
+  <script>
+    // --------- Floating Hearts Background ----------
+    const heartEmojis = ["💖","💘","💗","💕","💞","💓","❤️"];
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+
+      const size = Math.random() * 18 + 10; // 10 to 28px
+      heart.style.fontSize = size + "px";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.bottom = "-30px";
+
+      const duration = Math.random() * 3 + 3; // 3-6s
+      heart.style.animationDuration = duration + "s";
+
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000);
+    }
+    setInterval(createHeart, 250);
+
+    // --------- Buttons Logic ----------
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const mainCard = document.getElementById("mainCard");
+    const finalCard = document.getElementById("finalCard");
+
+    const copyBtn = document.getElementById("copyBtn");
+    const againBtn = document.getElementById("againBtn");
+    const copyText = document.getElementById("copyText");
+
+    let noCount = 0;
+
+    const noMessages = [
+      "Are you sure? 😭",
+      "Think again Deepa 🙁",
+      "Last chance 🏃🏻",
+      "Don’t break my heart 💔",
+      "Really really sure?? 🥺",
+      "iam pavam",
+      "iam crying 😭"
+    ];
+
+    function moveNoButton() {
+      noCount++;
+
+      // show funny message
+      alert(noMessages[Math.min(noCount - 1, noMessages.length - 1)]);
+
+      // move button randomly
+      const padding = 10;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      // make YES button bigger slowly 😈
+      const scale = 1 + (noCount * 0.05);
+      yesBtn.style.transform = `scale(${Math.min(scale, 1.5)})`;
+    }
+
+    noBtn.addEventListener("click", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+      mainCard.classList.add("hidden");
+      noBtn.classList.add("hidden");
+      finalCard.classList.remove("hidden");
+
+      // little confetti vibes (emoji burst)
+      for (let i = 0; i < 18; i++) setTimeout(createHeart, i * 60);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(copyText.innerText.replaceAll("“","").replaceAll("”",""));
+        copyBtn.innerText = "Copied ✅❤️";
+        setTimeout(() => (copyBtn.innerText = "Copy message 📋"), 1400);
+      } catch {
+        alert("Copy not supported here 😭\nJust manually copy the message ❤️");
+      }
+    });
+
+    againBtn.addEventListener("click", () => {
+      window.location.reload();
+    });
+  </script>
+
+</body>
+</html>
